@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from 'react';
+import s from './App.module.css';
+import Searchbar from './Searchbar';
+import ImageGallery from './ImageGallery';
+import Button from './Button';
+// import Modal from './Modal';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    searchQuery: '',
+    page: 1,
+  };
+
+  formSubmitHandler = value => {
+    this.setState({
+      searchQuery: value,
+    });
+  };
+
+  handleClickMoreImages = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  render() {
+    const { searchQuery, page } = this.state;
+    return (
+      <div className={s.App}>
+        <Searchbar onSubmit={this.formSubmitHandler} />
+        <ImageGallery searchQuery={searchQuery} page={page} />
+        <Button onClick={this.handleClickMoreImages} />
+        {/* <Modal /> */}
+      </div>
+    );
+  }
 }
 
 export default App;
