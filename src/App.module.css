@@ -4,3 +4,9 @@
   grid-gap: 16px;
   padding-bottom: 24px;
 }
+
+.notificationText {
+  margin: 20px auto;
+  font: inherit;
+  font-size: 18px;
+}
