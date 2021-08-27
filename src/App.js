@@ -7,9 +7,7 @@ import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Loader from './components/Loader';
 import Modal from './components/Modal';
-
-const API_KEY = '22470352-c65ac8cc67498f5a0ef8fcd03';
-const BASE_URL = 'https://pixabay.com/api';
+import fetchImages from './service/fetchImages';
 
 class App extends Component {
   state = {
@@ -54,17 +52,8 @@ class App extends Component {
     });
   };
 
-  async fetchImages(searchQuery, page) {
-    const url = `${BASE_URL}/?image_type=photo&orientation=horizontal&q=${searchQuery}&page=${page}&per_page=12&key=${API_KEY}`;
-
-    const response = await fetch(url);
-    const images = await response.json();
-    this.setState({ loading: false });
-    return images;
-  }
-
   async fetchNextImagePages(searchQuery, page) {
-    const { hits } = await this.fetchImages(searchQuery, page);
+    const { hits } = await fetchImages(searchQuery, page);
     const images = hits.map(({ id, webformatURL, largeImageURL }) => {
       return { id, webformatURL, largeImageURL };
     });
@@ -74,13 +63,14 @@ class App extends Component {
   }
 
   async fetchFirstImagePage(searchQuery, page) {
-    const { hits, total } = await this.fetchImages(searchQuery, page);
+    const { hits, total } = await fetchImages(searchQuery, page);
     const images = hits.map(({ id, webformatURL, largeImageURL }) => {
       return { id, webformatURL, largeImageURL };
     });
     this.setState({
       imagePage: images,
       total,
+      loading: false,
     });
   }
 
@@ -100,15 +90,14 @@ class App extends Component {
     return (
       <div className={s.App}>
         <Searchbar onSubmit={this.formSubmitHandler} />
-        {loading && <Loader />}
         <ImageGallery
           searchQuery={searchQuery}
           imagePage={imagePage}
           onOpenModal={this.toggleModal}
         />
-        {total > 0 ? (
-          <Button onClick={this.handleClickMoreImages} />
-        ) : (
+        {loading && <Loader />}
+        {total > 0 && <Button onClick={this.handleClickMoreImages} />}
+        {!loading && total === 0 && (
           <p className={s.notificationText}>
             Sorry, we do not have any images for your request
           </p>
