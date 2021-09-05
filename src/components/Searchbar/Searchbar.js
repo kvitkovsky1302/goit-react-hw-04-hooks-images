@@ -1,38 +1,33 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import s from './Searchbar.module.css';
 import SearchForm from '../SearchForm';
 
-class Searchbar extends Component {
-  state = {
-    searchQuery: '',
+function Searchbar({ onSubmit }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchQuery = e => {
+    setSearchQuery(e.currentTarget.value.toLowerCase());
   };
 
-  handleSearchQuery = e => {
-    this.setState({ searchQuery: e.currentTarget.value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.searchQuery);
-    this.setState({ searchQuery: '' });
-    if (this.state.searchQuery === '') {
+    onSubmit(searchQuery);
+    setSearchQuery('');
+    if (searchQuery === '') {
       toast.error('Please, enter your request!');
     }
   };
 
-  render() {
-    const { searchQuery } = this.state;
-    return (
-      <header className={s.Searchbar}>
-        <SearchForm
-          onSubmit={this.handleSubmit}
-          onChange={this.handleSearchQuery}
-          value={searchQuery}
-        />
-      </header>
-    );
-  }
+  return (
+    <header className={s.Searchbar}>
+      <SearchForm
+        onSubmit={handleSubmit}
+        onChange={handleSearchQuery}
+        value={searchQuery}
+      />
+    </header>
+  );
 }
 
 export default Searchbar;

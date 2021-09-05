@@ -6,7 +6,7 @@ async function fetchImages(searchQuery, page) {
 
   const response = await fetch(url);
   const images = await response.json();
-  //   this.setState({ loading: false });
+
   return images;
 }
 
