@@ -25,6 +25,7 @@ function App() {
 
   const formSubmitHandler = value => {
     setImagePage([]);
+    setPage(1);
     setSearchQuery(value);
   };
 
@@ -60,7 +61,7 @@ function App() {
         onOpenModal={toggleModal}
       />
       {loading && <Loader />}
-      {total > 0 && <Button onClick={handleClickMoreImages} />}
+      {total > 0 && !loading && <Button onClick={handleClickMoreImages} />}
       {!loading && total === 0 && (
         <p className={s.notificationText}>
           Sorry, we do not have any images for your request
